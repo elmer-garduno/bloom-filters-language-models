@@ -1,6 +1,35 @@
 metodos-mapreduce
 =================
 
+#### Resultados separando en espacios
+
+```
+become,apparent,before  1
+been,exactly,34 1
+before,a,child  1
+behavior.,The,diagnostic        1
+below,,the,winner       1
+below,are,listed        1
+best,art,direction      1
+best-known,compositions.,Gershwin       1
+```
+
+#### Resultados utilizando un `Analyzer`
+
+```
+before,child,three      1
+beginning,poem,statius  1
+behavior,diagnostic,criteria    1
+being,dimensionless,fraction    1
+below,listed,production 1
+below,winner,award      1
+best,art,direction      2
+best,known,compositions 1
+```
+
+
+
+
 Opciones comunes para configurar Hadoop localmente:
 
 
