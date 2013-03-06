@@ -68,7 +68,7 @@ elastic-mapreduce --create --name "mapreduce" --enable-debugging --jar s3n://met
 --num-instances 8 --instance-type m1.medium
 ```
 
-Utilizar PIG para analizar los resultados
+### Utilizar PIG para analizar los resultados
 
 ```
 elastic-mapreduce --create --alive --name "Contar NGramas" --hadoop-version 1.0.3  --ami-version 2.2 \
