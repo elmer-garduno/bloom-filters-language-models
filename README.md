@@ -58,29 +58,26 @@ Descargar de from http://aws.amazon.com/developertools/2264 y configurar las cre
   }
 ```
 
-#### Calcular los 4-gramas para los artículos de wikipedia y utilizar PIG para analizar los resultados
+#### Calcular los 4-gramas para los artículos de wikipedia y utilizar Pig para analizar los resultados
 
-Crear un bucket utilizando la consola de S3 y reemplazar `mi-bucket` con el nombre del bucket recien creado.
+1) Crear un bucket utilizando la consola de S3 y reemplazar `mi-bucket` con el nombre del bucket recien creado.
 
-```
-elastic-mapreduce --create --name "mapreduce" --enable-debugging --jar s3n://metodos/mapreduce-1.0.0-SNAPSHOT.jar \
---main-class mx.itam.metodos.mr.CountNGrams \
---arg -libjars --arg s3n://metodos/guava-13.0.1.jar,s3n://metodos/lucene-analyzers-common-4.1.0.jar,s3n://metodos/lucene-core-4.1.0.jar \
---args s3n://metodos/long_abstracts_en.txt,s3n://mi-bucket/long_abstracts_en-out,4,true \
---num-instances 8 --instance-type m1.medium
-```
+2) Crear un job flow en EMR
 
 ```
 elastic-mapreduce --create --alive --name "Contar NGramas" --hadoop-version 1.0.3  --ami-version 2.2 \
 --num-instances 4 --instance-type m1.medium --pig-interactive --pig-versions latest
 ```
 
+3) Calcular los 4-gramas utilizando un `Analyzer`
 ```
-elastic-mapreduce --jar s3://us-east-1.elasticmapreduce/libs/s3distcp/1.latest/s3distcp.jar \
---args '--src,s3://mi-bucket/long_abstracts_en.txt-out-3/,--dest,hdfs:///long_abstracts_en.txt-out-3' \
---enable-debugging --jobflow j-2DFKYG43FH7JK 
+elastic-mapreduce --jar s3n://metodos/mapreduce-1.0.0-SNAPSHOT.jar --main-class mx.itam.metodos.mr.CountNGrams \
+--arg -libjars --arg s3n://metodos/guava-13.0.1.jar,s3n://metodos/lucene-analyzers-common-4.1.0.jar,s3n://metodos/lucene-core-4.1.0.jar \
+--args s3n://metodos/long_abstracts_en.txt,hdfs:///long_abstracts_en.txt-out-3,4,true \
+--enable-debugging --jobflow j-AAAAAAAAAAAAA
 ```
 
+4) Utilizar Pig para ordenar los resultados de forma descendente y sleccionar los 1000 más altos
 ```
 data = LOAD 'hdfs:///long_abstracts_en.txt-out-3/' AS (text:chararray, count:int);
 data_sorted = ORDER data BY count DESC;
@@ -88,6 +85,7 @@ data_top = LIMIT data_sorted 1000;
 STORE data_top INTO 'hdfs:///long_abstracts_en.txt-top-3/' USING PigStorage ('\t');
 ```
 
+5) Copiar los resultados a S3
 ```
 elastic-mapreduce --jobflow j-2DFKYG43FH7JK --jar s3://us-east-1.elasticmapreduce/libs/s3distcp/1.latest/s3distcp.jar \
 --args '--dest,s3://mi-bucket/long_abstracts_en.txt-top-3/,--src,hdfs:///long_abstracts_en.txt-top-3' 
