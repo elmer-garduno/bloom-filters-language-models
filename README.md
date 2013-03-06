@@ -29,7 +29,6 @@ best,known,compositions 1
 
 
 
-
 Opciones comunes para configurar Hadoop localmente:
 
 
@@ -108,5 +107,12 @@ Utilizar PIG para analizar los resultados
 
 ```
 elastic-mapreduce --create --alive --name "Contar NGramas" --hadoop-version 1.0.3  --ami-version 2.2 \
---num-instances 8 --instance-type m1.medium --pig-interactive --pig-versions latest
+--num-instances 4 --instance-type m1.medium --pig-interactive --pig-versions latest
+```
+
+```
+data = LOAD 's3n://metodos/some-out-3/' AS (text:chararray, count:int);
+data_sorted = ORDER data BY count DESC;
+data_top = LIMIT data_sorted 10;
+STORE data_top INTO 's3n://metodos/some-out-3-top/' USING PigStorage ('\t');
 ```
