@@ -73,22 +73,22 @@ elastic-mapreduce --create --alive --name "Contar NGramas" --hadoop-version 1.0.
 ```
 elastic-mapreduce --jar s3n://metodos/mapreduce-1.0.0-SNAPSHOT.jar --main-class mx.itam.metodos.mr.CountNGrams \
 --arg -libjars --arg s3n://metodos/guava-13.0.1.jar,s3n://metodos/lucene-analyzers-common-4.1.0.jar,s3n://metodos/lucene-core-4.1.0.jar \
---args s3n://metodos/long_abstracts_en.txt,hdfs:///long_abstracts_en.txt-out-3,4,true \
+--args s3n://metodos/long_abstracts_en.txt,hdfs:///long_abstracts_en.txt-out,4,true \
 --enable-debugging --jobflow j-AAAAAAAAAAAAA
 ```
 
 4) Utilizar Pig para ordenar los resultados de forma descendente y sleccionar los 1000 más altos
 ```
-data = LOAD 'hdfs:///long_abstracts_en.txt-out-3/' AS (text:chararray, count:int);
+data = LOAD 'hdfs:///long_abstracts_en.txt-out-4/' AS (text:chararray, count:int);
 data_sorted = ORDER data BY count DESC;
 data_top = LIMIT data_sorted 1000;
-STORE data_top INTO 'hdfs:///long_abstracts_en.txt-top-3/' USING PigStorage ('\t');
+STORE data_top INTO 'hdfs:///long_abstracts_en.txt-top-4/' USING PigStorage ('\t');
 ```
 
 5) Copiar los resultados a S3
 ```
 elastic-mapreduce --jobflow j-2DFKYG43FH7JK --jar s3://us-east-1.elasticmapreduce/libs/s3distcp/1.latest/s3distcp.jar \
---args '--dest,s3://mi-bucket/long_abstracts_en.txt-top-3/,--src,hdfs:///long_abstracts_en.txt-top-3' 
+--args '--dest,s3://mi-bucket/long_abstracts_en.txt-top-4/,--src,hdfs:///long_abstracts_en.txt-top-4' 
 ```
 
 ### Opciones comunes para configurar Hadoop localmente:
