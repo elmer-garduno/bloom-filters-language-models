@@ -16,7 +16,12 @@ public final class NGramsMapper extends Mapper<LongWritable, Text, Text, IntWrit
 
   @Override
   public void map(LongWritable id, Text value, Context context) throws IOException, InterruptedException {
-    String text = value.toString();
+    String[] values = value.toString().split("\t");
+    if (values.length > 1) {
+      tokenize(values[1], context);
+    }
+  }
+    private void tokenize(String text, Context context) throws IOException, InterruptedException {
     String[] array = text.split("\\s");
     Joiner joiner = Joiner.on(",");
     Text key = new Text();
