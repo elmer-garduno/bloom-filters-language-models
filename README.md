@@ -58,7 +58,7 @@ Descargar de from http://aws.amazon.com/developertools/2264 y configurar las cre
   }
 ```
 
-#### Calcular los n-gramas y utilizar PIG para analizar los resultados
+#### Calcular los 4-gramas para los artículos de wikipedia y utilizar PIG para analizar los resultados
 
 Crear un bucket utilizando la consola de S3 y reemplazar `mi-bucket` con el nombre del bucket recien creado.
 
