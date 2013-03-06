@@ -111,6 +111,22 @@ elastic-mapreduce --create --alive --name "Contar NGramas" --hadoop-version 1.0.
 ```
 
 ```
+elastic-mapreduce --jar s3://us-east-1.elasticmapreduce/libs/s3distcp/1.latest/s3distcp.jar \
+--args '--src,s3://metodos/long_abstracts_en.txt-out-3/,--dest,hdfs:///long_abstracts_en.txt-out-3' \
+--enable-debugging --jobflow j-2DFKYG43FH7JK 
+```
+
+```
+data = LOAD 'hdfs:///long_abstracts_en.txt-out-3/' AS (text:chararray, count:int);
+data_sorted = ORDER data BY count DESC;
+data_top = LIMIT data_sorted 1000;
+STORE data_top INTO 'hdfs:///long_abstracts_en.txt-top-3/' USING PigStorage ('\t');
+```
+
+```
+elastic-mapreduce --jobflow j-2DFKYG43FH7JK --jar s3://us-east-1.elasticmapreduce/libs/s3distcp/1.latest/s3distcp.jar \
+--args '--dest,s3://metodos/long_abstracts_en.txt-top-3/,--src,hdfs:///long_abstracts_en.txt-top-3' 
+```
 data = LOAD 's3n://metodos/some-out-3/' AS (text:chararray, count:int);
 data_sorted = ORDER data BY count DESC;
 data_top = LIMIT data_sorted 10;
