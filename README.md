@@ -72,7 +72,7 @@ elastic-mapreduce --create --alive --name "Contar NGramas" --hadoop-version 1.0.
 3) Copiar los datos de entrada a hdfs
 ```
 elastic-mapreduce --jar s3://us-east-1.elasticmapreduce/libs/s3distcp/1.latest/s3distcp.jar --args \
-'--dest,hdfs:///metodos/long_abstracts_en.txt,--src,s3n://metodos/long_abstracts_en.txt' \
+'--dest,hdfs:///long_abstracts_en.txt,--src,s3n://metodos/long_abstracts_en.txt' \
 --jobflow j-1VCI7WQ8IM1N8
 ```
 
