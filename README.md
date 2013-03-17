@@ -73,7 +73,7 @@ elastic-mapreduce --create --alive --name "Contar NGramas" --hadoop-version 1.0.
 ```
 elastic-mapreduce --jar s3n://metodos/mapreduce-1.0.0-SNAPSHOT.jar --main-class mx.itam.metodos.mr.CountNGrams \
 --arg -libjars --arg s3n://metodos/guava-13.0.1.jar,s3n://metodos/lucene-analyzers-common-4.1.0.jar,s3n://metodos/lucene-core-4.1.0.jar \
---args s3n:///metodos/long_abstracts_en.txt,hdfs:///long_abstracts_en.txt-out,4,true \
+--args s3n://metodos/long_abstracts_en.txt,hdfs:///long_abstracts_en.txt-out,4,true \
 --enable-debugging --jobflow j-AAAAAAAAAAAAA
 ```
 
