@@ -69,22 +69,15 @@ elastic-mapreduce --create --alive --name "Contar NGramas" --hadoop-version 1.0.
 --num-instances 4 --instance-type m1.medium --pig-interactive --pig-versions latest
 ```
 
-3) Copiar los datos de entrada a hdfs
-```
-elastic-mapreduce --jar s3://us-east-1.elasticmapreduce/libs/s3distcp/1.latest/s3distcp.jar --args \
-'--dest,hdfs:///long_abstracts_en.txt,--src,s3n://metodos/long_abstracts_en.txt' \
---jobflow j-1VCI7WQ8IM1N8
-```
-
-4) Calcular los 4-gramas utilizando un `Analyzer`
+3) Calcular los 4-gramas utilizando un `Analyzer`
 ```
 elastic-mapreduce --jar s3n://metodos/mapreduce-1.0.0-SNAPSHOT.jar --main-class mx.itam.metodos.mr.CountNGrams \
 --arg -libjars --arg s3n://metodos/guava-13.0.1.jar,s3n://metodos/lucene-analyzers-common-4.1.0.jar,s3n://metodos/lucene-core-4.1.0.jar \
---args hdfs:///long_abstracts_en.txt,hdfs:///long_abstracts_en.txt-out,4,true \
+--args s3n:///metodos/long_abstracts_en.txt,hdfs:///long_abstracts_en.txt-out,4,true \
 --enable-debugging --jobflow j-AAAAAAAAAAAAA
 ```
 
-5) Utilizar Pig para ordenar los resultados de forma descendente y sleccionar los 1000 más altos
+4) Utilizar Pig para ordenar los resultados de forma descendente y sleccionar los 1000 más altos
 ```
 
 elastic-mapreduce --pig-script s3n://metodos/get-top-k.pig \
@@ -92,7 +85,7 @@ elastic-mapreduce --pig-script s3n://metodos/get-top-k.pig \
 --enable-debugging --jobflow j-AAAAAAAAAAAAA
 ```
 
-6) Copiar los resultados a S3
+5) Copiar los resultados a S3
 ```
 elastic-mapreduce --jar s3://us-east-1.elasticmapreduce/libs/s3distcp/1.latest/s3distcp.jar \
 --args '--dest,s3://mi-bucket/long_abstracts_en.txt-top-4/,--src,hdfs:///long_abstracts_en.txt-top-4' \
