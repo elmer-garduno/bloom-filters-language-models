@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 // Based on the algorithm described on 
 // Smoothed Bloom ﬁlter language models: Tera-Scale LMs on the Cheap
 // David Talbot and Miles Osborne
+// http://acl.ldc.upenn.edu/D/D07/D07-1049.pdf
 
 public final class TrainBFMapper extends Mapper<LongWritable, Text, NullWritable, IntArrayWritable> {
   
