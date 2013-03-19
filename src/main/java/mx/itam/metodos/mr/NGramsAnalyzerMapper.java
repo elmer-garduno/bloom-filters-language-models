@@ -12,6 +12,7 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.apache.lucene.analysis.util.CharArraySet;
 import org.apache.lucene.util.Version;
 
 import com.google.common.base.Joiner;
@@ -30,7 +31,7 @@ public final class NGramsAnalyzerMapper extends Mapper<LongWritable, Text, Text,
   }
   
   private void analyze(String text, Context context) throws IOException, InterruptedException {
-    Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_41);
+    Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_41, (CharArraySet) null);
     TokenStream ts = analyzer.tokenStream("text", new StringReader(text));
     CharTermAttribute termAtt = ts.addAttribute(CharTermAttribute.class);
     Joiner joiner = Joiner.on(",");

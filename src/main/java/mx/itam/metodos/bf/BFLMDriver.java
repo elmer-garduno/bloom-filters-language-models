@@ -1,10 +1,11 @@
-package mx.itam.metodos.mr;
+package mx.itam.metodos.bf;
+
+import mx.itam.metodos.common.IntArrayWritable;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
@@ -13,9 +14,11 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
-public class CountNGrams extends Configured implements Tool {
+public class BFLMDriver extends Configured implements Tool {
 
   public static final String N = "n";
+  public static final String P = "p";
+  public static final String OUT_PATH = "out-path";
 
   @Override
   public int run(String[] args) throws Exception {
@@ -23,27 +26,27 @@ public class CountNGrams extends Configured implements Tool {
     Path data = new Path(args[0]);
     int rows = Integer.parseInt(args[2]);
     conf.setInt(N, rows);
-    boolean analyze = Boolean.parseBoolean(args[3]);
-    String suffix = String.format("%s-%s", rows, analyze);
+    float err = Float.parseFloat(args[3]);
+    conf.setFloat(P, err);
+    conf.set(OUT_PATH, args[4]);
+    String suffix = String.format("%s", rows);
     Path out = new Path(args[1] + "-" + suffix);
     out.getFileSystem(conf).delete(out, true);
-    return (computeNGrams(data, out, analyze, conf)) ? 0 : 1;
+    return (computeNGrams(data, out, conf)) ? 0 : 1;
   }
 
-  private static boolean computeNGrams(Path data, Path out, boolean analyze, Configuration conf) throws Exception {
+  private static boolean computeNGrams(Path data, Path out, Configuration conf)
+          throws Exception {
     Job job = new Job(conf, "compute-ngrams");
-    job.setJarByClass(CountNGrams.class);
-    if (analyze) {
-      job.setMapperClass(NGramsAnalyzerMapper.class);
-    } else {
-      job.setMapperClass(NGramsMapper.class);
-    }
-    job.setMapOutputKeyClass(Text.class);
-    job.setMapOutputValueClass(IntWritable.class);
-    job.setCombinerClass(NGramsReducer.class);
-    job.setReducerClass(NGramsReducer.class);
-    job.setOutputKeyClass(Text.class);
-    job.setOutputValueClass(IntWritable.class);
+    job.setJarByClass(BFLMDriver.class); 
+    job.setMapperClass(TrainBFMapper.class);
+    job.setMapOutputKeyClass(NullWritable.class);
+    job.setMapOutputValueClass(IntArrayWritable.class);
+    //job.setCombinerClass(NGramsReducer.class);
+    job.setReducerClass(TrainBFReducer.class);
+    job.setNumReduceTasks(1);
+    job.setOutputKeyClass(NullWritable.class);
+    job.setOutputValueClass(NullWritable.class);
     job.setInputFormatClass(TextInputFormat.class);
     job.setOutputFormatClass(TextOutputFormat.class);
     FileInputFormat.setInputPaths(job, data);
@@ -52,7 +55,7 @@ public class CountNGrams extends Configured implements Tool {
   }
 
   public static void main(String[] args) throws Exception {
-    int res = ToolRunner.run(new Configuration(), new CountNGrams(), args);
+    int res = ToolRunner.run(new Configuration(), new BFLMDriver(), args);
     System.exit(res);
   }
 }
