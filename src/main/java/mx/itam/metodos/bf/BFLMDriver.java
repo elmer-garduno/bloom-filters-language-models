@@ -42,7 +42,6 @@ public class BFLMDriver extends Configured implements Tool {
     job.setMapperClass(TrainBFMapper.class);
     job.setMapOutputKeyClass(NullWritable.class);
     job.setMapOutputValueClass(IntArrayWritable.class);
-    //job.setCombinerClass(NGramsReducer.class);
     job.setReducerClass(TrainBFReducer.class);
     job.setNumReduceTasks(1);
     job.setOutputKeyClass(NullWritable.class);

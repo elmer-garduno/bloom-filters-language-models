@@ -28,7 +28,6 @@ public class TrainBFReducer extends Reducer<NullWritable, IntArrayWritable, Null
         filter.set(pos.get());
       }
     }
-    //context.write(key, new IntWritable(count));
   }
   
   @Override

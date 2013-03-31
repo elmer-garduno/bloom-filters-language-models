@@ -41,7 +41,7 @@ public class BFTool {
       int[] pos = functions.getHashes(rep);
       for (int p : pos) {
         if (!bs.get(p)) {
-          return j - 1;
+          return j;
         }
       }
     }
@@ -49,6 +49,6 @@ public class BFTool {
   }
   
   private static int getE(int j) {
-    return (int) (Math.pow(2, j - 1) + Math.pow(2, j)  + 1)  / 2;
+    return (int) ((Math.pow(2, j - 1) + Math.pow(2, j)  - 1)  / 2);
   }
 }

@@ -5,11 +5,11 @@
 	<artifactId>mapreduce</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 
-	<name>Extended Configuration Description for UIMA pipelines</name>
+	<name>Metodos MapReduce</name>
 	<url>https://github.com/elmer-garduno/metodos-mapreduce</url>
 	<issueManagement>
-		<system>github.com</system>
 		<url>https://github.com/elmer-garduno/metodos-mapreduce/issues</url>
+		<system>github.com</system>
 	</issueManagement>
 	<inceptionYear>2013</inceptionYear>
 	<licenses>
