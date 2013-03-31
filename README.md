@@ -41,6 +41,23 @@ he,has,been	18437
 until,his,death	18364
 ```
 
+### Crear un modelo de lenguaje utilizando filtros bloom
+
+Basado en el algortimo descrito en *Smoothed Bloom ﬁlter language models: Tera-Scale LMs on the Cheap*, 
+David Talbot and Miles Osborne, http://acl.ldc.upenn.edu/D/D07/D07-1049.pdf
+
+Calcular el modelo de lenguaje
+```
+hadoop jar target/mapreduce-1.0.0-SNAPSHOT.jar mx.itam.metodos.bf.BFLMDriver -libjars guava-13.0.1.jar \
+medium.txt-out-5-true N 170490 0.03 medium.txt-lm
+```
+
+Probar el modelo de lenguaje localmente:
+```
+hadoop dfs -get medium.txt-lm .
+java  mx.itam.metodos.bf.BFTool medium.txt-lm 170490 0.03 4
+```
+
 ### Procesar en elastic-map-reduce
 
 Para utilizar este ejemplo es necesario crear un par de credenciales de AWS y configurar el programa elastic-mapreduce:
