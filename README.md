@@ -1,7 +1,7 @@
 bloom-filters-language models
 =================
 
-### Calculate n-gramas given a list of Wikipedia abstracts
+### Calculate n-grams from a list of Wikipedia abstracts
 
 ```
 Autism    Autism is a disorder of neural development characterized by impaired social interaction and communication,
@@ -60,9 +60,7 @@ java  mx.itam.metodos.bf.BFTool medium.txt-lm 170490 0.03 4
 
 ### Process on elastic-map-reduce
 
-Para utilizar este ejemplo es necesario crear un par de credenciales de AWS y configurar el programa elastic-mapreduce:
-
-Descargar de from http://aws.amazon.com/developertools/2264 y configurar las credenciales.
+Generate an AWS credentials pair. Download the `elastic-mapreduce` scripts from http://aws.amazon.com/developertools/2264 and configure the credentials.
 
 ```
   {
@@ -75,7 +73,7 @@ Descargar de from http://aws.amazon.com/developertools/2264 y configurar las cre
   }
 ```
 
-#### Calcular los 4-gramas para los artículos de wikipedia y utilizar Pig para analizar los resultados
+#### Calculate 4-grams for wikipedia articles and use `Pig` to analize the results:
 
 1) Crear un bucket utilizando la consola de S3 y reemplazar `mi-bucket` con el nombre del bucket recien creado.
 
