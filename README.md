@@ -1,7 +1,7 @@
-metodos-mapreduce
+bloom-filters-language models
 =================
 
-### Calcular n-gramas dada una lista de abstracts de Wikipedia
+### Calculate n-gramas given a list of Wikipedia abstracts
 
 ```
 Autism    Autism is a disorder of neural development characterized by impaired social interaction and communication,
@@ -16,7 +16,7 @@ his body except for his heel. As he died because of a small wound on his heel, t
 mean a person's principal weakness.
 ```
 
-#### Resultados para n = 3
+#### Results for n = 3
 
 ```
 t,t,t  153925
@@ -41,24 +41,24 @@ he,has,been	18437
 until,his,death	18364
 ```
 
-### Crear un modelo de lenguaje utilizando filtros bloom
+### Create a language model using bloom filters
 
-Basado en el algortimo descrito en *Smoothed Bloom ﬁlter language models: Tera-Scale LMs on the Cheap*, 
+Bases on the algorithm described on *Smoothed Bloom ﬁlter language models: Tera-Scale LMs on the Cheap*, 
 David Talbot and Miles Osborne, http://acl.ldc.upenn.edu/D/D07/D07-1049.pdf
 
-Calcular el modelo de lenguaje
+Create language model
 ```
 hadoop jar target/mapreduce-1.0.0-SNAPSHOT.jar mx.itam.metodos.bf.BFLMDriver -libjars guava-13.0.1.jar \
 medium.txt-out-5-true N 170490 0.03 medium.txt-lm
 ```
 
-Probar el modelo de lenguaje localmente:
+Test locally:
 ```
 hadoop dfs -get medium.txt-lm .
 java  mx.itam.metodos.bf.BFTool medium.txt-lm 170490 0.03 4
 ```
 
-### Procesar en elastic-map-reduce
+### Process on elastic-map-reduce
 
 Para utilizar este ejemplo es necesario crear un par de credenciales de AWS y configurar el programa elastic-mapreduce:
 
